@@ -21,6 +21,7 @@ module.exports = {
     },
     projects: [
         './test/jest.client.js',
+        // enable if you have a proper eslint configuration
         // './test/jest.lint.js',
     ],
 };
