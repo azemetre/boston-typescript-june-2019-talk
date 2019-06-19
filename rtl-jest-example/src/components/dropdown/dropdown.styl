@@ -1,0 +1,157 @@
+@import '../../styles/typography.styl';
+@import '../../styles/colors.styl';
+@import '../../styles/desiccant.styl';
+
+ul.list {
+    &.container {
+        position: relative;
+        width: 100%;
+        &.open {
+            border-radius: .25rem .25rem 0 0;
+            border-bottom: none;
+        }
+    }
+    font-family: $secondary;
+    color: $gray1;
+    background-color: inherit;
+    margin: 0;
+
+    li.head {
+        border: solid $dark-gray4 .0625rem;
+        border-radius: .25rem;
+        box-shadow: 0 .5rem 1rem -.5rem $gray4;
+        &:focus {
+            outline: none;
+            border-width: .25rem;
+        }
+        &:hover {
+            background-color: $dark-gray4;
+            color: $white;
+        }
+        &.disabled {
+            box-shadow: none;
+            color: $gray4;
+            border-color: $gray4;
+            &:hover {
+                cursor: default;
+                background-color: inherit;
+                color: inherit;
+            }
+        }
+        &.open {
+        background-color: $light-gray4;
+        border-radius: .25rem .25rem 0 0;
+        border-bottom: none;
+        border-width: .25rem;
+        }
+        span.head {
+            background-color: $white;
+            padding: .5rem 1rem;
+            &.open {
+                background-color: inherit;
+            }
+        }
+    }
+
+    &.options {
+        display: none;
+        position: absolute;
+        left: 0px;
+        top: 2.5rem;
+        width: 100%;
+        border: solid $dark-gray4 .25rem;
+        border-radius: 0 0 .25rem .25rem;
+        box-shadow: 0 .5rem 1rem -.5rem $gray4;
+        &.open {
+            border-top: none;
+            border-radius: 0 0 .25rem .25rem;
+            display: block;
+        }
+    }
+
+    list-style: none;
+    padding: 0;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+    }
+    &.disabled {
+        color: $gray4;
+        border-color: $gray4;
+    }
+    &.small {
+        font-size: $xs-rem;
+    }
+    &.medium {
+        font-size: $m-rem;
+    }
+    &.large {
+        font-size: $l-rem;
+    }
+}
+
+li.dropdown
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    color: inherit;
+    justify-content: space-between;
+    border-radius: inherit;
+
+    &.item
+        background-color: $white;
+        border-radius: 0;
+        &:hover
+            cursor: pointer
+        &:focus
+            background-color: $blue4;
+            color: $white;
+            padding: 0rem 1rem;
+            position: relative;
+            box-sizing: content-box;
+            left: -1rem;
+            width: 100%;
+            border-radius: .3rem;
+            box-shadow: 0 .5rem 1rem -.5rem $blue4;
+
+    &.disabledItem
+        background: repeating-linear-gradient(
+            -45deg,
+            $light-gray4,
+            $light-gray4 10px,
+            $light-gray2 10px,
+            $light-gray2 20px
+        )
+        color: $gray4
+        text-decoration: line-through
+        &:hover
+            cursor: not-allowed
+
+
+span.dropdown {
+    color: $gray1;
+    width: 100%;
+    border-radius: .25rem;
+    &.disabled {
+        color: inherit;
+    }
+    &.open {
+        background-color: inherit;
+    }
+    &.item {
+        padding: 1rem 1rem;
+        color: inherit;
+    }
+}
+
+.dropdown-arrow {
+    color: inherit;
+    transform: rotate(90deg);
+    transition: all .5s ease;
+    padding: 0 .25rem 0 .25rem;
+    &.open {
+        transform: rotate(-90deg);
+        color: $gray1;
+    }
+}

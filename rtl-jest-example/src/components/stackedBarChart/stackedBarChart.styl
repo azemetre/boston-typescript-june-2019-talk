@@ -1,0 +1,56 @@
+@import '../../styles/typography.styl';
+@import '../../styles/colors.styl';
+
+.text-label
+    fill: #A7B6C2
+    font-weight lighter
+
+.text-value
+    fill: #10161A
+    font-weight: bold
+
+
+.line-stack
+    stroke: #A7B6C2
+
+
+.rect-stack
+    &:hover
+        transition-duration: 0.35s;
+        fill-opacity: 0.6
+
+.loader-stackedBar 
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    overflow: hidden
+
+    >div
+        background: $light-gray2
+        width: 35%
+        animation: grow2 2s ease-in forwards
+        animation-iteration-count: infinite
+        
+        &:nth-child(1)
+            height: 10%
+
+        &:nth-child(2)
+            height: 37%
+
+        &:nth-child(3)
+            height: 50%        
+
+@keyframes grow2 {
+  from {
+    transform: translateX(-100%)
+    opacity: .2
+  }  
+  80% {
+    transform: translateX(0%)
+    opacity: 1
+  }
+
+  to {
+    transform: translateX(0%)
+  }
+}            

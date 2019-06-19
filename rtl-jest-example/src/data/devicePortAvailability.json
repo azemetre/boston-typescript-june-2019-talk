@@ -1,0 +1,6 @@
+[
+  { "label": "free", "value": 55 },
+  { "label": "inuse", "value": 1 },
+  { "label": "reserved", "value": 2 }
+
+]

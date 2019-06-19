@@ -1,0 +1,248 @@
+// desicant | des·ic·cant | desəkənt
+// noun
+// a hygroscopic substance used as a drying agent.
+
+base-font-size ?= 16px
+
+// true allows compatibility between IE8 and below
+responsive-bool ?= false
+
+desiccant = {
+  rasterise-media-queries: rasterise-media-queries
+  mobile-cutoff: 400px
+  desktop-cutoff: 1200px
+  hd-cutoff: 1800px
+  enable-em-breakpoints: false
+  base-font-size: base-font-size
+  anti-overlap: false
+  density-queries: 'dppx' 'webkit' 'moz' 'dpi'
+  retina-density: 1.5
+  use-device-width: false
+}
+desiccant.scale = 0 (desiccant.mobile-cutoff) 600px 800px (desiccant.desktop-cutoff) (desiccant.hd-cutoff)
+desiccant.scale-names = 'xs' 's' 'm' 'l' 'xl' 'hd'
+
+-is-string(val)
+  if typeof(val) is not 'unit'
+    if val is a 'string' or val is a 'ident'
+      true
+    else
+      false
+  else
+    false
+
+-get-scale-number(scale-name)
+  for list-item, i in desiccant.scale-names
+    if list-item is scale-name
+      return i + 1
+  return false
+
+-convert-to(to-unit, value, context = desiccant.base-font-size)
+  from-unit = unit(value)
+  return value if to-unit is from-unit
+  if to-unit in ('em' 'rem')
+    return value if from-unit in ('em' 'rem')
+    return unit((value / context), to-unit)
+  if to-unit is 'px'
+    return unit((value * context), 'px')
+
+-on-scale(n)
+  return unit(n) is ''
+
+-larger-than-scale(n)
+  return (n > (length(desiccant.scale) - 1)) and -on-scale(n)
+
+-is-zero(n)
+  return n is 0
+
+-overlap-shift(anti-overlap, n)
+  shift-unit = unit(n)
+  anti-overlap = 0 unless anti-overlap
+  anti-overlap = 1px if anti-overlap is true
+  if length(anti-overlap) is 1
+    return -convert-to(shift-unit, anti-overlap)
+  for val in anti-overlap
+    return val if unit(val) is shift-unit
+
+-adjust-overlap(anti-overlap, n, side = 'min')
+  -shift = -overlap-shift(anti-overlap, n)
+  if (side is 'min' and -shift > 0) or (side is 'max' and -shift < 0)
+    n = n + -shift
+  return n
+
+-is-positive(n)
+  return n >= 0
+
+-density-queries(density)
+  if typeof(density) is not 'unit'
+    if not -is-string(density)
+      density = '%s' % density
+  density = desiccant.retina-density if density is 'retina'
+  queries = ()
+  for query in desiccant.density-queries
+    if query is 'webkit'
+      push(queries, '(-webkit-min-device-pixel-ratio: %s)' % (density))
+    else if query is 'moz'
+      push(queries, '(min--moz-device-pixel-ratio: %s)' % (density))
+    else if query is 'o'
+      push(queries, '(-o-min-device-pixel-ratio: %s/1)' % (density))
+    else if query is 'ratio'
+      push(queries, '(min-device-pixel-ratio: %s)' % (density))
+    else if query is 'dpi'
+      if -is-string(density)
+        density = convert(density)
+      push(queries, '(min-resolution: %sdpi)' % (round(density * 96, 1)))
+    else if query is 'dppx'
+      push(queries, '(min-resolution: %sdppx)' % (density))
+  return queries
+
+between(min, max, anti-overlap = desiccant.anti-overlap, density = null, orientation = null, use-device-width = desiccant.use-device-width)
+  selected = selector()
+
+  if -is-string(orientation)
+    orientation = convert(orientation)
+  if -is-string(density)
+    density = convert(density)
+  if -is-string(min)
+    min = -get-scale-number(min)
+  if -is-string(max)
+    max = -get-scale-number(max)
+
+  -min = desiccant.scale[min - 1] unless -is-zero(min) or (not -on-scale(min))
+  -max = desiccant.scale[max] unless not -on-scale(max)
+  -min ?= min
+  -max ?= max
+
+  if responsive-bool
+    if not (density or -max or orientation)
+      {block}
+  else
+    condition = 'only screen'
+    use-device-width = use-device-width ? 'device-' : ''
+    unless -min is 0
+      -min = -convert-to('em', -min) if desiccant.enable-em-breakpoints
+      -min = -adjust-overlap(anti-overlap, -min, side: 'min')
+      condition = condition + ' and (min-' + use-device-width + 'width: %s)' % (-min)
+    unless -larger-than-scale(max)
+      -max = -convert-to('em', -max) if desiccant.enable-em-breakpoints
+      -max = -adjust-overlap(anti-overlap, -max, side: 'max')
+      condition = condition + ' and (max-' + use-device-width + 'width: %s)' % (-max)
+    if orientation
+      condition = condition + ' and (orientation: %s)' % (orientation)
+    if density
+      conditions = ()
+      for query in -density-queries(density)
+        push(conditions, condition + ' and %s' % (query))
+      condition = join(', ', conditions)
+    @media condition
+      {block}
+
+at(scale-point, anti-overlap = desiccant.anti-overlap, density = null, orientation = null, use-device-width = desiccant.use-device-width)
+  if -is-string(orientation)
+    orientation = convert(orientation)
+  if -is-string(density)
+    density = convert(density)
+  +between(scale-point, scale-point, anti-overlap, density, orientation, use-device-width)
+    {block}
+
+from-width(scale-point, anti-overlap = desiccant.anti-overlap, density = null, orientation = null, use-device-width = desiccant.use-device-width)
+  if -is-string(orientation)
+    orientation = convert(orientation)
+  if -is-string(density)
+    density = convert(density)
+  +between(scale-point, length(desiccant.scale), anti-overlap, density, orientation, use-device-width)
+    {block}
+
+above = from-width
+
+to-width(scale-point, anti-overlap = desiccant.anti-overlap, density = null, orientation = null, use-device-width = desiccant.use-device-width)
+  if -is-string(orientation)
+    orientation = convert(orientation)
+  if -is-string(density)
+    density = convert(density)
+  +between(1, scale-point, anti-overlap, density, orientation, use-device-width)
+    {block}
+
+below = to-width
+
+mobile(anti-overlap = desiccant.anti-overlap, density = null, orientation = null, use-device-width = desiccant.use-device-width)
+  if -is-string(orientation)
+    orientation = convert(orientation)
+  if -is-string(density)
+    density = convert(density)
+  +below(desiccant.mobile-cutoff, anti-overlap, density, orientation, use-device-width)
+    {block}
+
+tablet(anti-overlap = desiccant.anti-overlap, density = null, orientation = null, use-device-width = desiccant.use-device-width)
+  if -is-string(orientation)
+    orientation = convert(orientation)
+  if -is-string(density)
+    density = convert(density)
+  +between(desiccant.mobile-cutoff, desiccant.desktop-cutoff, anti-overlap, density, orientation, use-device-width)
+    {block}
+
+desktop(anti-overlap = desiccant.anti-overlap, density = null, orientation = null, use-device-width = desiccant.use-device-width)
+  if -is-string(orientation)
+    orientation = convert(orientation)
+  if -is-string(density)
+    density = convert(density)
+  +above(desiccant.desktop-cutoff, anti-overlap, density, orientation, use-device-width)
+    {block}
+
+hd(anti-overlap = desiccant.anti-overlap, density = null, orientation = null, use-device-width = desiccant.use-device-width)
+  if -is-string(orientation)
+    orientation = convert(orientation)
+  if -is-string(density)
+    density = convert(density)
+  +above(desiccant.hd-cutoff, anti-overlap, density, orientation, use-device-width)
+    {block}
+
+density(density, orientation = null)
+  selected = selector()
+  if not responsive-bool
+    conditions = ()
+    for query in -density-queries(density)
+      condition = 'only screen and %s' % (query)
+      if orientation
+        condition = condition + ' and (orientation: %s)' % (orientation)
+      push(conditions, condition)
+    condition = join(', ', conditions)
+    @media condition
+      {block}
+
+pixel-ratio = density
+
+retina(orientation = null)
+  +density('retina', orientation)
+    {block}
+
+landscape(density = null)
+  selected = selector()
+  if not responsive-bool
+    if -is-string(density)
+      density = convert(density)
+    if density
+      +pixel-ratio(density, orientation: landscape)
+        {block}
+    else
+      @media only screen and (orientation: landscape)
+        {block}
+
+portrait(density = null)
+  selected = selector()
+  if not responsive-bool
+    if -is-string(density)
+      density = convert(density)
+    if density
+      +pixel-ratio(density, orientation: portrait)
+        {block}
+    else
+      @media only screen and (orientation: portrait)
+        {block}
+
+desiccant-hover(density = null, orientation = null)
+  condition = "only screen and (hover: hover)";
+  @media condition
+    {block}
+
+hover = desiccant-hover

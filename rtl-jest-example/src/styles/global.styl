@@ -1,0 +1,58 @@
+@import './colors.styl';
+@import './typography.styl';
+
+@import url("https://use.typekit.net/sud0dxc.css");
+@import url('https://fonts.googleapis.com/css?family=Archivo|Montserrat|Poppins|Muli');
+@import '~material-icons/iconfont/material-icons.css';
+
+// font-size is declared as 16px in './desiccant.styl'
+// unsure whether to include import or override font-size in './src/styles/typography.styl'
+// font-size derived from :root body element
+:root
+    font-size: 16px
+
+/*
+    this code is pasted from `../searchBox.styl`
+    this material style was overwritten in there originally
+    in case you provide better style for each component, plz remove
+*/
+button.material-icons
+    border: 0;
+    padding: 0;
+    background-color: inherit;
+    color: $black;
+
+    &:hover {
+        color: $cobalt4;
+        cursor: pointer;
+    }
+    &:focus {
+        outline: none;
+    }
+
+/*
+    moved from rechart style
+    impact: barChart, donutChart, lineChart
+*/
+.recharts-text
+.recharts-tooltip-wrapper
+.recharts-legend-wrapper {
+    font-family: $primary;
+}
+
+/*
+    This part is pasted from '../stackedBarChart.styl'
+    not properly written and should be removed,
+    but not sure if impact other style
+*/
+text
+    font-family: $primary
+    font-size: $xs-rem
+
+div.monaco-editor
+    & div
+    & span
+        font-family: inherit
+        font-weight: normal;
+        line-height: normal;
+        font-size: inherit;

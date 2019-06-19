@@ -1,0 +1,135 @@
+import { Head, Appear, Image, Notes } from 'mdx-deck';
+import { Invert } from 'mdx-deck/layouts';
+export { yellow as theme } from 'mdx-deck/themes';
+
+
+### Lazy Testing 
+getting by with "good enough"
+
+<Notes>
+testing can be hard.
+so let's make our lives easier.
+</Notes>
+
+---
+
+### two things to take away
+<ul>
+    <Appear>
+        <li>avoid testing implementation details</li>
+        <li>setting up a proper jest configuration</li>
+    </Appear>
+</ul>
+
+<Notes>
+    Jest is pretty cool.
+</Notes>
+
+---
+
+### our old test strategy
+<ul>
+    <Appear>
+        <li>enzyme + jest (components)</li>
+        <li>mocha + chai + sinon (backend)</li>
+        <li>selenium webdriver (e2e coverage)</li>
+    </Appear>
+</ul>
+
+<Notes>
+    Two different test runners. two different dependencies to keep track of.
+</Notes>
+
+---
+
+### the issue
+<ul>
+    <Appear>
+        <li>maintenance costs</li>
+    </Appear>
+</ul>
+
+---
+
+### maintenance costs
+
+<Notes>
+When refactoring a component, the implementation will change over time.
+May use different life cycles methods, going from class to hooks.
+The functionality of the component may not change, but how it works does.
+dozens of hours would be spent babysitting tests
+refactoring would break previous tests
+giving false negatives. code that broke the tests, weren't breaking features.
+we lost the confidence in our tests
+</Notes>
+
+---
+
+<Image src='img/input-class-2.png' size='75%' />
+
+<Notes>
+First run through of a form component, submit text it gets saved.
+basic react class component with event handlers and methods
+so in the future, we get a note from product about adding a second input.
+another developer works on the input box and turns it into a functional component
+lets see that how that could look now
+</Notes>
+
+---
+
+<Image src='img/useform-hook.png' size='75%' />
+
+<Notes>
+straight forward hook. useState to save the input values.
+return
+submit method that may make function calls or return a callback
+let's implement this hook into our revised inputbox
+</Notes>
+
+---
+
+<Image src='img/input-fc.png' size='75%' />
+
+<Notes>
+End use of this component is identical to the class component.
+A user will write text and submit text.
+What changed was the implementation. We're using hooks.
+But our previous tests would require maintenance, it's hard to balance pushing features and having good practices.
+</Notes>
+
+---
+
+### how did we avoid testing implementation details?
+
+<ul>
+    <Appear>
+        <li>We changed our strategy</li>
+    </Appear>
+</ul>
+
+---
+
+### we asked ourselves one question
+
+<ul>
+    <Appear>
+        <li>what is the the most critical part of our application?</li>
+    </Appear>
+</ul>
+
+<Notes>
+what are the interactions we can't have the user fail on.
+
+what are the pain points of the user flow.
+
+what we cared about was whether critical components were rendering and interacting properly.
+we cared that if we sent an event to a component, it would render a notification or change the presentation.
+to make our testing easier to maintain we introduced react-testing-library
+</Notes>
+
+---
+
+
+### before a the demo, any questions? 
+
+---

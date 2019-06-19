@@ -1,0 +1,7 @@
+[
+    { "label": ">100Gbs", "value": 6 },
+    { "label": "100Gbs", "value": 4 },
+    { "label": "40Gbs", "value": 7 },
+    { "label": "1Gbs", "value": 9 },
+    { "label": "<1Gbs", "value": 80 }
+]

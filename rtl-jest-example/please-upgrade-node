@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+var pkg = require('./package.json');
+var pleaseUpgradeNode = require('please-upgrade-node');
+
+pleaseUpgradeNode(pkg, {
+  exitCode: 1,
+  message: function(requiredVersion) {
+    return ('ERROR!! This program requires Node version ' +  requiredVersion + ' or higher' + '\nERROR!! This program requires Node version ' +  requiredVersion + ' or higher' + '\n\n');
+  }
+});
